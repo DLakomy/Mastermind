@@ -20,15 +20,13 @@ object MasterMind extends App {
   println("Test of defaults");
 
   // initialize game parameters
-  val (maxTurnNumber, codeLength, maxDigit) = {
+  val Array(maxTurnNumber, codeLength, maxDigit) = {
     if ( args.length == 3 ) {
-      ( args(0)
-      , args(1)
-      , args(2) )
+      args
     } else {
-      ( defValues.defMaxTurnNumber
-      , defValues.defCodeLength
-      , defValues.defMaxDigit )
+      Array( defValues.defMaxTurnNumber
+           , defValues.defCodeLength
+           , defValues.defMaxDigit )
     }
   }
 
