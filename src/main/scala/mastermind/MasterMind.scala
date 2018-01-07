@@ -17,6 +17,14 @@ package object defValues {
 }
 
 object MasterMind extends App {
+
+  type Code = Seq[Int]
+
+  def checkGuess( theCode : Code, guess : Code ) : Map[String,Int] = {
+    Map( "correct"   -> 4
+       , "misplaced" -> 0 )
+  }
+
   println("Test of defaults");
 
   // initialize game parameters
