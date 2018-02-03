@@ -21,8 +21,41 @@ object MasterMind extends App {
   type Code = Seq[Int]
 
   def checkGuess( theCode : Code, guess : Code ) : Map[String,Int] = {
-    Map( "correct"   -> 4
-       , "misplaced" -> 0 )
+
+    implicit class Groupable ( x: Seq[Int] ) extends AnyRef {
+      def groupDigits(): Map[Int,Int] = x.groupBy(identity).mapValues(_.length)
+    }
+
+    // maps digits in the code to the number of their occurences
+    val groupedDigits = theCode.groupDigits
+
+    // maps digits in the guess to number
+    // of their occurencies in the correct place
+    val correctDigits =
+      (for { x <- theCode.zipWithIndex
+             y <- guess.zipWithIndex
+             if x._2 == y._2 & x._1 == y._1
+           } yield x._1).groupDigits
+
+    // maps digits in the guess to the number of their
+    // occurencies in the code, without regard to the place
+    val containedDigits =
+      (for { x <- theCode.zipWithIndex
+             y <- guess.zipWithIndex
+             if x._1 == y._1
+           } yield x._1).groupDigits
+
+    // maps digits in the guess to the number of their
+    // occurencies, only misplaced ones
+    // TODO still not passing duplicates
+    val misplacedDigitsCount =
+      (for { (k,v) <- containedDigits
+
+       } yield containedDigits(k) - correctDigits.getOrElse(k,0)
+      ).sum
+
+    Map( "correct"   -> correctDigits.values.sum
+       , "misplaced" -> misplacedDigitsCount )
   }
 
   println("Test of defaults");
