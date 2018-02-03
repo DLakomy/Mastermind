@@ -31,7 +31,7 @@ object MasterMind extends App {
     val correctDigits =
       (for { x <- theCode.zipWithIndex
              y <- guess.zipWithIndex
-             if x._2 == y._2 && x._1 == y._1
+             if x._2 == y._2 && x._1 == y._1 // _1 stands for index, _2 for value
            } yield x._1).groupDigits
 
     // maps digits in the guess to the number of their
@@ -39,7 +39,7 @@ object MasterMind extends App {
     val containedDigits =
       (for { x <- theCode.zipWithIndex
              y <- guess.zipWithIndex
-             if x._1 == y._1 && x._2 != y._2
+             if x._2 != y._2 && x._1 == y._1 // _1 stands for index, _2 for value
            } yield x._1).groupDigits
 
     // maps digits in the guess to the number of their
