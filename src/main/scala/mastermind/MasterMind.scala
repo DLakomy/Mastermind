@@ -1,10 +1,8 @@
 /* MasterMind
 * TODO:
 * - implement user input with its validation,
-* - implement immutable board class,
-* - implement guess checker,
-* - implement game rules (win/lose conditions),P
-* - read parameters in a more civilised way...
+* - implement code generator with a logger,
+* - implement game rules (win/lose conditions).
 */
 
 package mastermind
