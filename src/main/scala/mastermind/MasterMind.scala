@@ -26,32 +26,30 @@ object MasterMind extends App {
       def groupDigits(): Map[Int,Int] = x.groupBy(identity).mapValues(_.length)
     }
 
-    // maps digits in the code to the number of their occurences
-    val groupedDigits = theCode.groupDigits
-
-    // maps digits in the guess to number
+    // maps digits in the guess to the number
     // of their occurencies in the correct place
     val correctDigits =
       (for { x <- theCode.zipWithIndex
              y <- guess.zipWithIndex
-             if x._2 == y._2 & x._1 == y._1
+             if x._2 == y._2 && x._1 == y._1
            } yield x._1).groupDigits
 
     // maps digits in the guess to the number of their
-    // occurencies in the code, without regard to the place
+    // occurencies in the code, only misplaced ones
     val containedDigits =
       (for { x <- theCode.zipWithIndex
              y <- guess.zipWithIndex
-             if x._1 == y._1
+             if x._1 == y._1 && x._2 != y._2
            } yield x._1).groupDigits
 
     // maps digits in the guess to the number of their
-    // occurencies, only misplaced ones
-    // TODO still not passing duplicates
+    // occurencies, only misplaced ones without the place to fit them
+    // e.g. 1234 and 1242 - '2' is misplaced, so it is counted in containedDigits,
+    // there is a '2' on its correct place, so there is no place to move it (unlike '4')
+    // to sum up, this value indcites misplaced numbers that could be moved to its place
     val misplacedDigitsCount =
-      (for { (k,v) <- containedDigits
-
-       } yield containedDigits(k) - correctDigits.getOrElse(k,0)
+      ( for { (k,v) <- containedDigits
+        } yield containedDigits(k) - correctDigits.getOrElse(k,0)
       ).sum
 
     Map( "correct"   -> correctDigits.values.sum
