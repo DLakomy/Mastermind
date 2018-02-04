@@ -18,6 +18,16 @@ object MasterMind extends App {
 
   type Code = Seq[Int]
 
+  def generateCode( codeLength : Int, maxDigit : Int ) : Seq[Int] = {
+    def generationLoop( code : Code = Nil ) : Code = {
+      if (code.length < codeLength) {
+        val newDigit = defValues.randomGen.nextInt(maxDigit)
+        generationLoop(code :+ newDigit+1) // +1 so as not to include 0
+      } else code
+    }
+     generationLoop()
+  }
+
   def checkGuess( theCode : Code, guess : Code ) : Map[String,Int] = {
 
     implicit class Groupable ( x: Seq[Int] ) extends AnyRef {
