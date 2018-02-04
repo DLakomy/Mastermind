@@ -11,7 +11,6 @@ package object defValues {
   val defMaxTurnNumber = 12 // how many times one can guess?
   val defCodeLength = 5 // how long is the code?
   val defMaxDigit = 6 // the code consists of numbers from 1 to defMaxDigit
-  val randomGen = new util.Random(System.currentTimeMillis)
 }
 
 object MasterMind extends App {
@@ -19,9 +18,12 @@ object MasterMind extends App {
   type Code = Seq[Int]
 
   def generateCode( codeLength : Int, maxDigit : Int ) : Seq[Int] = {
+
+    val randomGen = new util.Random(System.currentTimeMillis)
+
     def generationLoop( code : Code = Nil ) : Code = {
       if (code.length < codeLength) {
-        val newDigit = defValues.randomGen.nextInt(maxDigit)
+        val newDigit = randomGen.nextInt(maxDigit)
         generationLoop(code :+ newDigit+1) // +1 so as not to include 0
       } else code
     }
