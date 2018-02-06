@@ -8,6 +8,7 @@
 package mastermind
 
 import scala.annotation.tailrec
+     , com.typesafe.scalalogging.StrictLogging
 
 package object defValues {
   val defMaxTurnNumber = 12 // how many times one can guess?
@@ -15,7 +16,7 @@ package object defValues {
   val defMaxDigit = 6 // the code consists of numbers from 1 to defMaxDigit
 }
 
-object MasterMind extends App {
+object MasterMind extends App with StrictLogging {
 
   type Code = Seq[Int]
 
@@ -69,9 +70,9 @@ object MasterMind extends App {
   println("Test of defaults");
 
   // initialize game parameters
-  val Array(maxTurnNumber, codeLength, maxDigit) = {
+  val Array(maxTurnNumber, codeLength, maxDigit) : Array[Int] = {
     if ( args.length == 3 ) {
-      args
+      args map(_.toInt) // TODO there is no exception handling, since it'll be refactored soon
     } else {
       Array( defValues.defMaxTurnNumber
            , defValues.defCodeLength
@@ -80,4 +81,8 @@ object MasterMind extends App {
   }
 
   println( "Values: " + Array(maxTurnNumber, codeLength, maxDigit).mkString(", ") )
+
+  val code = generateCode(codeLength,maxDigit).mkString
+  println( s"Normal println. Random code: $code.")
+  logger.debug(s"Logger test. The code is $code.")
 }
