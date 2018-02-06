@@ -7,6 +7,8 @@
 
 package mastermind
 
+import scala.annotation.tailrec
+
 package object defValues {
   val defMaxTurnNumber = 12 // how many times one can guess?
   val defCodeLength = 5 // how long is the code?
@@ -21,13 +23,15 @@ object MasterMind extends App {
 
     val randomGen = new util.Random(System.currentTimeMillis)
 
+    @tailrec
     def generationLoop( code : Code = Nil ) : Code = {
       if (code.length < codeLength) {
         val newDigit = randomGen.nextInt(maxDigit)
         generationLoop(code :+ newDigit+1) // +1 so as not to include 0
       } else code
     }
-     generationLoop()
+
+    generationLoop()
   }
 
   def checkGuess( theCode : Code, guess : Code ) : Map[String,Int] = {
