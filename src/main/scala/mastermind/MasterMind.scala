@@ -37,7 +37,7 @@ object MasterMind extends App with StrictLogging {
 
   def checkGuess( theCode : Code, guess : Code ) : Map[String,Int] = {
 
-    implicit class Groupable ( x: Seq[Int] ) extends AnyRef {
+    implicit class Groupable ( x: Code ) extends AnyRef {
       def groupDigits(): Map[Int,Int] = x.groupBy(identity).mapValues(_.length)
     }
 
