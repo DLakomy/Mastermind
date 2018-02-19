@@ -1,7 +1,6 @@
 /* MasterMind
 * TODO:
 * - implement user input with its validation,
-* - implement code generator with a logger,
 * - implement game rules (win/lose conditions).
 */
 
