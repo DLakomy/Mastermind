@@ -26,8 +26,7 @@ object MasterMind extends App with StrictLogging {
     @tailrec
     def generationLoop( code : Code = Nil ) : Code = {
       if (code.length < codeLength) {
-        val newDigit = randomGen.nextInt(maxDigit)
-        generationLoop(code :+ newDigit+1) // +1 so as not to include 0
+        generationLoop(code :+ randomGen.nextInt(maxDigit)+1) // +1 so as not to include 0
       } else code
     }
 
