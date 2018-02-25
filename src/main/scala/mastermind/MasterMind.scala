@@ -15,7 +15,7 @@ package object defValues {
   val defMaxDigit = 6 // the code consists of numbers from 1 to defMaxDigit
 }
 
-object MasterMind extends App with StrictLogging {
+object MasterMind {
 
   type Code = Seq[Int]
 
@@ -64,6 +64,9 @@ object MasterMind extends App with StrictLogging {
     Map( "correct"   -> correctDigits.values.sum
        , "misplaced" -> misplacedDigitsCount )
   }
+}
+
+object MasterMindCli extends App with StrictLogging {
 
   println("Test of defaults");
 
@@ -80,7 +83,7 @@ object MasterMind extends App with StrictLogging {
 
   println( "Values: " + Array(maxTurnNumber, codeLength, maxDigit).mkString(", ") )
 
-  val code = generateCode(codeLength,maxDigit).mkString
+  val code = MasterMind.generateCode(codeLength,maxDigit).mkString
   println( s"Normal println. Random code: $code.")
   logger.debug(s"Logger test. The code is $code.")
 }
