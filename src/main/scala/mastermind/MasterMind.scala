@@ -13,6 +13,13 @@ package object defValues {
   val defMaxTurnNumber = 12 // how many times one can guess?
   val defCodeLength = 5 // how long is the code?
   val defMaxDigit = 6 // the code consists of numbers from 1 to defMaxDigit
+
+  val greeting = "You are playing MASTERMIND\n"+
+                 "Guess the code. Read the rules somewhere else.\n"+
+                 "The author was lazy, thus you won't find'em here."
+
+  val invalidParamsWarning = "WARNING! The parameters given were invalid. "+
+                             "Default values have been assumed."
 }
 
 object MasterMind {
@@ -68,20 +75,40 @@ object MasterMind {
 
 object MasterMindCli extends App with StrictLogging {
 
-  println("Test of defaults");
+  // at the moment it only parses the arguments list
+  // it could contain some restrictions though
+  // (Either would be preferred to Option in such case, I guess)
+  def parseArgs(args : Array[String]) : Option[Array[Int]] =
+    try Some(args.map(_.toInt)) catch {case e: Exception => None}
 
   // initialize game parameters
-  val Array(maxTurnNumber, codeLength, maxDigit) : Array[Int] = {
-    if ( args.length == 3 ) {
-      args map(_.toInt) // TODO there is no exception handling, since it'll be refactored soon
-    } else {
-      Array( defValues.defMaxTurnNumber
-           , defValues.defCodeLength
-           , defValues.defMaxDigit )
-    }
-  }
+  // (I didn't have time nor idea to do it better)
+  val parsedArgs = parseArgs(args)
 
-  println( "Values: " + Array(maxTurnNumber, codeLength, maxDigit).mkString(", ") )
+  val Array(maxTurnNumber, codeLength, maxDigit) : Array[Int] = {
+    // I know it's a stupid condition - this is what I was talking about above
+    if ( args.length == 3 ) {
+      parsedArgs
+    } else {
+      None
+    }
+  }.getOrElse( Array( defValues.defMaxTurnNumber
+                    , defValues.defCodeLength
+                    , defValues.defMaxDigit ) )
+
+  // errh... greetings
+  println(defValues.greeting);
+
+  // optional warning about invalid parameters
+  if (parsedArgs == None)
+    println("\n" + defValues.invalidParamsWarning)
+
+  // print the game configuration
+  println( "\n"+
+           "Game parameters: \n"+
+          s"  No of turns: $maxTurnNumber\n"+
+          s"  Code length: $codeLength\n"+
+          s"  Available digits: 1 to $maxDigit inclusive")
 
   val code = MasterMind.generateCode(codeLength,maxDigit).mkString
   println( s"Normal println. Random code: $code.")
