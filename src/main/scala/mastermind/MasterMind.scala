@@ -73,7 +73,7 @@ object MasterMind {
   }
 }
 
-object MasterMindCli extends App with StrictLogging {
+object MasterMindCLI extends App with StrictLogging {
 
   // at the moment it only parses the arguments list
   // it could contain some restrictions though
