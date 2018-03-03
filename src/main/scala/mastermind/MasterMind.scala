@@ -9,7 +9,7 @@ import scala.annotation.tailrec
      , scala.io.StdIn.readLine
      , com.typesafe.scalalogging.StrictLogging
 
-package object defValues {
+package object defaults {
   val defMaxTurnNumber = 12 // how many times one can guess?
   val defCodeLength = 5 // how long is the code?
   val defMaxDigit = 6 // the code consists of numbers from 1 to defMaxDigit
@@ -20,11 +20,13 @@ package object defValues {
 
   val invalidParamsWarning = "WARNING! The parameters given were invalid. "+
                              "Default values have been assumed."
+
+  type CodeType = Seq[Int]
 }
 
 object MasterMind {
 
-  type Code = Seq[Int]
+  type Code = defaults.CodeType
 
   def generateCode( codeLength : Int, maxDigit : Int ) : Seq[Int] = {
 
@@ -82,7 +84,7 @@ object MasterMindCLI extends App with StrictLogging {
     try Some(args.map(_.toInt)) catch {case e: Exception => None}
 
   @tailrec
-  def readCode(codeLength: Int, maxDigit: Int): Seq[Int] = {
+  def readCode(codeLength: Int, maxDigit: Int): defaults.CodeType = {
 
     def parseCode(codeString: String, codeLength: Int, maxDigit: Int): Either[String, Seq[Int]] = {
 
@@ -132,16 +134,16 @@ object MasterMindCLI extends App with StrictLogging {
     } else {
       None
     }
-  }.getOrElse( Array( defValues.defMaxTurnNumber
-                    , defValues.defCodeLength
-                    , defValues.defMaxDigit ) )
+  }.getOrElse( Array( defaults.defMaxTurnNumber
+                    , defaults.defCodeLength
+                    , defaults.defMaxDigit ) )
 
   // errh... greetings
-  println(defValues.greeting);
+  println(defaults.greeting);
 
   // optional warning about invalid parameters
   if (parsedArgs == None)
-    println("\n" + defValues.invalidParamsWarning)
+    println("\n" + defaults.invalidParamsWarning)
 
   // print the game configuration
   println( "\n"+
