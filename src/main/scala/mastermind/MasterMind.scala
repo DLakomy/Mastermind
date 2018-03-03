@@ -126,6 +126,9 @@ object MasterMindCLI extends App with StrictLogging {
     }
   }
 
+  /* END OF DEFINITIONS */
+  /* HERE WE START PREPARATIONS */
+
   // initialize game parameters
   // (I didn't have time nor idea to do it better)
   val parsedArgs = parseArgs(args)
@@ -141,6 +144,11 @@ object MasterMindCLI extends App with StrictLogging {
                     , defaults.defCodeLength
                     , defaults.defMaxDigit ) )
 
+  /* END OF PREPARATIONS */
+  /* HERE WE START THE GAME */
+  val code = MasterMind.generateCode(codeLength,maxDigit)
+  logger.debug(s"Logger test. The code is ${code.mkString}.")
+
   // errh... greetings
   println(defaults.greeting);
 
@@ -154,10 +162,6 @@ object MasterMindCLI extends App with StrictLogging {
           s"  No of turns: $maxTurnNumber\n"+
           s"  Code length: $codeLength\n"+
           s"  Available digits: 1 to $maxDigit inclusive")
-
-  val code = MasterMind.generateCode(codeLength,maxDigit).mkString
-  println( s"Normal println. Random code: $code.")
-  logger.debug(s"Logger test. The code is $code.")
 
   // for testing purposes
   val test = readCode(codeLength, maxDigit)
