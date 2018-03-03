@@ -1,12 +1,12 @@
 /* MasterMind
 * TODO:
-* - implement user input with its validation,
 * - implement game rules (win/lose conditions).
 */
 
 package mastermind
 
 import scala.annotation.tailrec
+     , scala.io.StdIn.readLine
      , com.typesafe.scalalogging.StrictLogging
 
 package object defValues {
@@ -81,6 +81,46 @@ object MasterMindCLI extends App with StrictLogging {
   def parseArgs(args : Array[String]) : Option[Array[Int]] =
     try Some(args.map(_.toInt)) catch {case e: Exception => None}
 
+  @tailrec
+  def readCode(codeLength: Int, maxDigit: Int): Seq[Int] = {
+
+    def parseCode(codeString: String, codeLength: Int, maxDigit: Int): Either[String, Seq[Int]] = {
+
+      val parsedCode =
+        try {
+            Right(codeString
+              .trim.split(" +")
+              .toList.map(_.toInt))
+        } catch {
+          case nfe: NumberFormatException => Left("Invalid input.")
+        }
+
+      parsedCode match {
+        case Left(_) => parsedCode
+
+        case Right(codeSeq) => {
+          // check if numbers are in the interval (0,maxDigit]
+          if ( codeSeq.exists(x => x<=0 || x>maxDigit) ) {
+            Left(s"One of the digits is not between 1 and $maxDigit.")
+          } else
+          // check the length (should be equal to codeLength)
+          if ( codeSeq.length != codeLength ) {
+            Left(s"The code length should equal $codeLength.")
+          } else
+          parsedCode
+        }
+      }
+    }
+
+    val codeString = readLine("Type your guess: ")
+
+    parseCode(codeString, codeLength, maxDigit) match {
+      case Right(code) => code
+      case Left(errorMsg) => println(errorMsg)
+                             readCode(codeLength, maxDigit)
+    }
+  }
+
   // initialize game parameters
   // (I didn't have time nor idea to do it better)
   val parsedArgs = parseArgs(args)
@@ -113,4 +153,8 @@ object MasterMindCLI extends App with StrictLogging {
   val code = MasterMind.generateCode(codeLength,maxDigit).mkString
   println( s"Normal println. Random code: $code.")
   logger.debug(s"Logger test. The code is $code.")
+
+  // for testing purposes
+  val test = readCode(codeLength, maxDigit)
+  println(test)
 }
