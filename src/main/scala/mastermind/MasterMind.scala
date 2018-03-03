@@ -16,7 +16,10 @@ package object defaults {
 
   val greeting = "You are playing MASTERMIND\n"+
                  "Guess the code. Read the rules somewhere else.\n"+
-                 "The author was lazy, thus you won't find'em here."
+                 "The author was lazy, thus you won't find'em here.\n"+
+                 "\n"+
+                 "BTW. You can type three digits as arguments to change\n"+
+                 "the game parameters. Sorry for not providing better input."
 
   val invalidParamsWarning = "WARNING! The parameters given were invalid. "+
                              "Default values have been assumed."
