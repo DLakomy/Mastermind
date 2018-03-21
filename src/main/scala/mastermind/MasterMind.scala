@@ -31,7 +31,7 @@ object MasterMind {
 
   type Code = defaults.CodeType
 
-  def generateCode( codeLength : Int, maxDigit : Int ) : Seq[Int] = {
+  def generateCode( codeLength : Int, maxDigit : Int ) : Code = {
 
     val randomGen = new util.Random(System.currentTimeMillis)
 
@@ -82,6 +82,8 @@ object MasterMind {
 
 object MasterMindCLI extends App with StrictLogging {
 
+  type Code = defaults.CodeType
+
   // at the moment it only parses the arguments list
   // it could contain some restrictions though
   // (Either would be preferred to Option in such case, I guess)
@@ -89,9 +91,9 @@ object MasterMindCLI extends App with StrictLogging {
     try Some(args.map(_.toInt)) catch {case e: Exception => None}
 
   @tailrec
-  def readCode(codeLength: Int, maxDigit: Int): defaults.CodeType = {
+  def readCode(codeLength: Int, maxDigit: Int): Code = {
 
-    def parseCode(codeString: String, codeLength: Int, maxDigit: Int): Either[String, Seq[Int]] = {
+    def parseCode(codeString: String, codeLength: Int, maxDigit: Int): Either[String, Code] = {
 
       val parsedCode =
         try {
