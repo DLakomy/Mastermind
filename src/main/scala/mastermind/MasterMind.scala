@@ -59,16 +59,18 @@ object MasterMind {
              if x._2 == y._2 && x._1 == y._1 // _1 stands for value, _2 for index
        } yield x._1).groupDigits
 
-    // maps digits in the guess to the number of their
-    // occurencies, only misplaced ones without the place to fit them
-    // e.g. 1234 and 1242 - '2' is misplaced, so it is counted in containedDigits,
-    // there is a '2' on its correct place, so there is no place to move it (unlike '4')
-    // to sum up, this value indcites misplaced numbers that could be moved to its place
+    // maps digits in the guess to the number of their occurencies,
+    // only misplaced ones without the place to fit them
+    // e.g. 1234 and 1242 - the second '2' is misplaced, so it is counted in misplacedDigitsCount,
+    // there is a '2' in its correct place, so there is no place to move it (unlike '4')
+    // to sum up, this value indicates misplaced numbers that could be moved to its place
     val misplacedDigitsCount =
-      (for { x <- theCode.zipWithIndex
-             y <- guess.zipWithIndex
-             if x._2 != y._2 && x._1 == y._1 // _1 stands for value, _2 for index
-       } yield x._1)
+      (for { (guessDigit,guessIdx) <- guess.zipWithIndex
+             if theCode.zipWithIndex
+                  .exists{
+                     case (codeDigit,codeIdx) => codeDigit == guessDigit && codeIdx != guessIdx
+                   }
+       } yield guessDigit)
          .groupDigits
          .map{ case (k,v) => v-correctDigits.getOrElse(k,0) }
          .sum
