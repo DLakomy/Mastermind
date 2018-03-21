@@ -130,6 +130,25 @@ object MasterMindCLI extends App with StrictLogging {
     }
   }
 
+  @tailrec
+  def controlLoop( generatedCode: Code
+                 , maxTurnNumber: Integer
+                 , codeLength: Integer
+                 , maxDigit: Integer
+                 , currentTurn: Integer ): Unit = {
+
+    val result = MasterMind.checkGuess( generatedCode, readCode(codeLength, maxDigit) )
+
+    if ( currentTurn == maxTurnNumber )
+      println("lose")
+    else if ( result("correct") != codeLength ) {
+      println(s"Result: ${result("correct")} correct, ${result("misplaced")} misplaced.")
+      controlLoop(generatedCode,maxTurnNumber,codeLength,maxDigit,currentTurn+1)
+    } else {
+      println("won")
+    }
+  }
+
   /* END OF DEFINITIONS */
   /* HERE WE START PREPARATIONS */
 
@@ -167,7 +186,5 @@ object MasterMindCLI extends App with StrictLogging {
           s"  Code length: $codeLength\n"+
           s"  Available digits: 1 to $maxDigit inclusive")
 
-  // for testing purposes
-  val test = readCode(codeLength, maxDigit)
-  println(test)
+  controlLoop(code, maxTurnNumber, codeLength, maxDigit, 1)
 }
