@@ -66,5 +66,16 @@ class CheckSpec extends FunSuite {
     }
   }
 
+  test("some other tests: code 223 and guess 222") {
+    val testData = ( Seq(2,2,3)
+                   , Seq(2,2,2)
+                   , (2,0) ) // there is no place for the second '2'
+                             // so it can't be considered as misplaced
+
+    assertResult( testData._3 ) {
+      val resultMap = MasterMind.checkGuess(testData._1, testData._2)
+      ( resultMap("correct"), resultMap("misplaced") )
+    }
+  }
 }
 
