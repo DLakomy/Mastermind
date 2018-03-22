@@ -178,7 +178,9 @@ object MasterMindCLI extends App with StrictLogging {
   /* END OF PREPARATIONS */
   /* HERE WE START THE GAME */
   val code = MasterMind.generateCode(codeLength,maxDigit)
-  logger.debug(s"Logger test. The code is ${code.mkString}.")
+
+  // uncomment it if you want to debug (I can't configure it in a beter way, sorry)
+  //logger.debug(s"Logger test. The code is ${code.mkString}.")
 
   // errh... greetings
   println(defaults.greeting);
