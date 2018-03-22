@@ -1,7 +1,4 @@
-/* MasterMind
-* TODO:
-* - implement game rules (win/lose conditions).
-*/
+/* MasterMind */
 
 package mastermind
 
@@ -19,10 +16,15 @@ package object defaults {
                  "The author was lazy, thus you won't find'em here.\n"+
                  "\n"+
                  "BTW. You can type three digits as arguments to change\n"+
-                 "the game parameters. Sorry for not providing better input."
+                 "the game parameters. Sorry for not providing better input option.\n"+
+                 "\n"+
+                 "When you guess the code, separate the numbers using space."
 
   val invalidParamsWarning = "WARNING! The parameters given were invalid. "+
                              "Default values have been assumed."
+
+  val loseMessage = "No more chances. You lose."
+  val wonMessage = "You won. Congratulations."
 
   type CodeType = Seq[Int]
 }
@@ -96,7 +98,7 @@ object MasterMindCLI extends App with StrictLogging {
     try Some(args.map(_.toInt)) catch {case e: Exception => None}
 
   @tailrec
-  def readCode(codeLength: Int, maxDigit: Int): Code = {
+  def readCode(codeLength: Int, maxDigit: Int, currentTurn: Int, maxTurn: Int): Code = {
 
     def parseCode(codeString: String, codeLength: Int, maxDigit: Int): Either[String, Code] = {
 
@@ -126,12 +128,12 @@ object MasterMindCLI extends App with StrictLogging {
       }
     }
 
-    val codeString = readLine("Type your guess: ")
+    val codeString = readLine(s"Type your guess (turn $currentTurn/$maxTurn): ")
 
     parseCode(codeString, codeLength, maxDigit) match {
       case Right(code) => code
       case Left(errorMsg) => println(errorMsg)
-                             readCode(codeLength, maxDigit)
+                             readCode(codeLength, maxDigit, currentTurn, maxTurn)
     }
   }
 
@@ -142,15 +144,16 @@ object MasterMindCLI extends App with StrictLogging {
                  , maxDigit: Integer
                  , currentTurn: Integer ): Unit = {
 
-    val result = MasterMind.checkGuess( generatedCode, readCode(codeLength, maxDigit) )
+    val result = MasterMind.checkGuess( generatedCode, readCode(codeLength,maxDigit
+                                                               ,currentTurn,maxTurnNumber) )
 
     if ( currentTurn == maxTurnNumber )
-      println("lose")
+      println(defaults.loseMessage)
     else if ( result("correct") != codeLength ) {
       println(s"Result: ${result("correct")} correct, ${result("misplaced")} misplaced.")
       controlLoop(generatedCode,maxTurnNumber,codeLength,maxDigit,currentTurn+1)
     } else {
-      println("won")
+      println(defaults.wonMessage)
     }
   }
 
@@ -189,7 +192,7 @@ object MasterMindCLI extends App with StrictLogging {
            "Game parameters: \n"+
           s"  No of turns: $maxTurnNumber\n"+
           s"  Code length: $codeLength\n"+
-          s"  Available digits: 1 to $maxDigit inclusive")
+          s"  Available digits: 1 to $maxDigit inclusive\n")
 
   controlLoop(code, maxTurnNumber, codeLength, maxDigit, 1)
 }
