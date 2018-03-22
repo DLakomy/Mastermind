@@ -64,15 +64,20 @@ object MasterMind {
     // e.g. 1234 and 1242 - the second '2' is misplaced, so it is counted in misplacedDigitsCount,
     // there is a '2' in its correct place, so there is no place to move it (unlike '4')
     // to sum up, this value indicates misplaced numbers that could be moved to its place
-    val misplacedDigitsCount =
-      (for { (guessDigit,guessIdx) <- guess.zipWithIndex
-             if theCode.zipWithIndex
-                  .exists{
-                     case (codeDigit,codeIdx) => codeDigit == guessDigit && codeIdx != guessIdx
-                   }
-       } yield guessDigit)
+    val groupedCodeRest = // I group here the digits in the code which are not guessed correctly
+      (for { x <- theCode.zipWithIndex
+             y <- guess.zipWithIndex
+             if x._2 == y._2 && x._1 != y._1 // _1 stands for value, _2 for index
+       } yield x._1).groupDigits
+
+    val misplacedDigitsCount = // I group here the digits in the guess which are not correct
+      (for { x <- theCode.zipWithIndex
+             y <- guess.zipWithIndex
+             if x._2 == y._2 && x._1 != y._1 // _1 stands for value, _2 for index
+       } yield y._1)
          .groupDigits
-         .map{ case (k,v) => v-correctDigits.getOrElse(k,0) }
+         // the line below... it is so, I believe
+         .map{ case (k,v) => v min groupedCodeRest.getOrElse(k,0) }
          .sum
 
     Map( "correct"   -> correctDigits.values.sum
