@@ -1,8 +1,8 @@
 package mastermind
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CheckSpec extends FunSuite {
+class CheckSpec extends AnyFunSuite {
 
   test("counting correct digits in correct positions") {
     val testData = ( Seq(1,2,3,4)

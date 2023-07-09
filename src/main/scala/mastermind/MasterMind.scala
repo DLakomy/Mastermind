@@ -4,7 +4,6 @@ package mastermind
 
 import scala.annotation.tailrec
      , scala.io.StdIn.readLine
-     , com.typesafe.scalalogging.StrictLogging
 
 package object defaults {
   val defMaxTurnNumber = 12 // how many times one can guess?
@@ -50,7 +49,7 @@ object MasterMind {
   def checkGuess( theCode : Code, guess : Code ) : Map[String,Int] = {
 
     implicit class Groupable ( x: Code ) extends AnyRef {
-      def groupDigits(): Map[Int,Int] = x.groupBy(identity).mapValues(_.length)
+      def groupDigits: Map[Int,Int] = x.groupBy(identity).mapValues(_.length).toMap
     }
 
     // maps digits in the guess to the number
@@ -88,7 +87,7 @@ object MasterMind {
   }
 }
 
-object MasterMindCLI extends App with StrictLogging {
+object MasterMindCLI extends App {
 
   type Code = defaults.CodeType
 
