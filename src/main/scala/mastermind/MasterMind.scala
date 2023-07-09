@@ -82,6 +82,7 @@ object MasterMind {
          .map{ case (k,v) => v min groupedCodeRest.getOrElse(k,0) }
          .sum
 
+    // FIXME it should be a case class!!! I didn't know 5 years ago, sorry!
     Map( "correct"   -> correctDigits.values.sum
        , "misplaced" -> misplacedDigitsCount )
   }
